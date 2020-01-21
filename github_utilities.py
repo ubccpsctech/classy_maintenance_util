@@ -49,43 +49,37 @@ def set_api_path():
 
 def request(endpoint_url):
 	headers = get_headers(api_token)
-	response = requests.get(endpoint_url, headers)
+	response = requests.get(endpoint_url, headers=headers)
 	if response.status_code >=200 and response.status_code <300:
-		print(response.content)
 		data = json.loads(response.content)
 		return data
 	else: 
-		print(response.status_code)
+		print('API ERROR: ' + str(response.status_code))
 		raise SystemError('Could not connect to API. Status code: ' + response.status_code)
 	return data
 
-def get_organization_teams():
+def get_org_team_ids():
 	endpoint_url = '{0}/orgs/{1}/teams'.format(api_path, github_org)
-	print(endpoint_url)
-	headers = get_headers(api_token)
-	response = requests.get(endpoint_url, headers=headers)
-	teamNames = []
-	if response.status_code >=200 and response.status_code <300:
-		print(response.content)
-		teams = json.loads(response.content)
-		for team in teams:
-			teamNames.append(team['name'])
-	else:
-		print(response.status_code)
-	return teamNames
+	teamIds = []
+	teams = request(endpoint_url)
+	for team in teams:
+		print(team)
+		teamIds.append(team['id'])
+	return teamIds
 
-def get_all_repos_per_team(teams):
+def get_all_repos_per_team(team_ids):
 	allReposPerTeam = []
-	for team in teams: 
-		endpoint_url = '{0}/organizations/{1}/team/{2}/repos/orgs/teams'.format(team.api_path, team.github_org, team.team_id)
+	for team_id in team_ids: 
+		endpoint_url = '{0}/teams/{1}/repos'.format(api_path, team_id)
+		print(endpoint_url)
 		reposPerTeam = request(endpoint_url)
-	allReposPerTeam.append(reposPerTeam)
+		print(reposPerTeam)
+	# allReposPerTeam.append(reposPerTeam)
+	return allReposPerTeam
 
-def remove_repos_from_team(team, repos): 
+def remove_repos_from_team(team, repos):
 	for repos in team.repos:
 		team_id = team.id
-		repo = 
-
 		data = request(endpoint_url)
 		print(data)
 
@@ -96,10 +90,10 @@ api_path = set_api_path()
 print(api_token)
 print(github_org)
 print(api_path)
-print(get_organization_teams())
-teams = get_organization_teams()
+teams = get_org_team_ids()
 allReposPerTeam = get_all_repos_per_team(teams)
-removeAllReposPerTeam = remove_all_repos_per_team(allReposPerTeam)
+print(allReposPerTeam)
+# removeAllReposPerTeam = remove_all_repos_per_team(allReposPerTeam)
 # repos = get_organization_repos()
 
 
