@@ -49,19 +49,19 @@ def set_api_path():
 	set_api_path_prompt = 'What is the API path (ie. https://github-dev.students.cs.ubc.ca/api/v3)? '
 	return get_input(set_api_path_prompt).strip()
 
-def set_ignore_teams(): 
-	if 'ignore_teams' in config[course]:
-		ignore_teams = config[course]['ignore_teams'].replace(' ', '').split(',')
+def set_ignored_teams(): 
+	if 'ignored_teams' in config[course]:
+		ignored_teams = config[course]['ignored_teams'].replace(' ', '').split(',')
 		return ignore_teams
-	set_ignore_teams_prompt = 'What teams would you like to ignore? Please enter comma seperated teams (ie. staff, admin, students, etc.) '
-	return get_input(set_ignore_teams_prompt).strip(' ').split(',')
+	set_ignored_teams_prompt = 'What teams would you like to ignore? Please enter comma seperated teams (ie. staff, admin, students, etc.) '
+	return get_input(set_ignored_teams_prompt).strip(' ').split(',')
 
-def set_ignore_users(): 
-	if 'ignore_users' in config[course]:
-		ignore_teams = config[course]['ignore_teams'].replace(' ', '').split(',')
-		return ignore_teams
-	set_ignore_teams_prompt = 'What teams would you like to ignore? Please enter comma seperated teams (ie. staff, admin, students, etc.) '
-	return get_input(set_ignore_teams_prompt).strip(' ').split(',')
+def set_ignored_users(): 
+	if 'ignored_users' in config[course]:
+		ignored_teams = config[course]['ignore_teams'].replace(' ', '').split(',')
+		return ignored_teams
+	set_ignored_teams_prompt = 'What teams would you like to ignore? Please enter comma seperated teams (ie. staff, admin, students, etc.) '
+	return get_input(set_ignored_teams_prompt).strip(' ').split(',')
 
 
 def request(endpoint_url, verb='get'):
@@ -112,6 +112,15 @@ def remove_repos_from_team(team_id, owner, repo_name):
 	# endpoint_url = '{0}/teams/{1}/repos/{2}/{3}'.format(api_path, team_id, owner, repo_name) #delete method
 	# print(endpoint_url)
 
+def get_team_id_from_team_name(teams, team_names):
+	team_ids = {}
+	for team in teams: 
+		for team_name in team_names:
+			if team.name == team_name:
+				team_ids[team_name] = team.id
+	return team_ids
+
+
 def remove_all_repos_from_teams(all_repos_per_team):
 	print('GithubUtilities:: remove_all_repos_from_teams() - start')
 	total_repos_removed = 0
@@ -122,16 +131,19 @@ def remove_all_repos_from_teams(all_repos_per_team):
 			team_id = repo_in_team['id']
 			owner = repo_in_team['owner']['login']
 			repo_name = repo_in_team['name']
-			endpoint_url_test = '{0}/teams/{1}/repos/{2}/{3}'.format(api_path, '2390', 'cpsc210-2019w-t1', 'test_repo') #delete method
-			response = request(endpoint_url_test, 'delete')
-			if response.status_code == 204: 
-				# print('GithubUtilities:: Removed ' + repo_name + ' from ' + team_name)
-				repos_removed+=1 
-		print('GithubUtilities:: Finished removing ' + str(repos_removed) + ' from team ' + team_name)
+			if ignore_users.index(repo_name):
+				print('GithubUtilities:: Found ignored user. Skipping team removal for repo ' + repo_name)
+			else: 
+				endpoint_url_test = '{0}/teams/{1}/repos/{2}/{3}'.format(api_path, '2390', 'cpsc210-2019w-t1', 'test_repo') #delete method
+				response = request(endpoint_url_test, 'delete')
+				if response.status_code == 204: 
+					# print('GithubUtilities:: Removed ' + repo_name + ' from ' + team_name)
+					repos_removed+=1 
+				print('GithubUtilities:: Finished removing ' + str(repos_removed) + ' from team ' + team_name)
 		total_repos_removed+=repos_removed
 	print('GithubUtilities:: Total Repos Removed from Teams: ' + str(total_repos_removed))
 
-course = get_input('What is your course number (ie. 436v)? ')
+course = get_input('What is your course number (ie. 436v)? ')	
 github_org = set_github_org()
 api_token = set_api_token()
 api_path = set_api_path()
@@ -147,14 +159,18 @@ teams = get_org_teams()
 all_repos_per_team = get_all_repos_per_team(teams)
 
 ## Remove the teams to ignore (ie. staff, admin) from dictionary so they do not become modified
-ignore_users = []
-for team in ignore_teams: 
-	team_id = all_repos_per_team[team]['id']
+ignored_users = []
+ignored_team_ids = get_team_id_from_team_name(teams, ignore_teams)
+
+for ignored_team in ignored_teams: 
+	team_id = all_repos_per_team[ignored_team]
 	print(team_id)
-	team_members = get_team_members(team).json()
+	## must somehow get team id here
+	## the team id is in
+	team_members = get_team_members(ignored_team).json()
 	for team_member in team_members:
 		ignore_users.append(team_member.login)
-	del_key_from_dict(all_repos_per_team, team)
+	del_key_from_dict(all_repos_per_team, ignored_team)
 
 remove_all_repos_from_teams(all_repos_per_team)
 # print(all_repos_per_team)
