@@ -4,7 +4,6 @@ import json
 import requests
 from configparser import ConfigParser
 from config import course, github_org, api_token, api_path, ignored_team_names
-# from business.operations import start, start2
 from pprint import pprint
 import time
 
@@ -26,7 +25,5 @@ def main_menu():
 		exit()
 	else:
 		main_menu()
-
-
 
 main_menu()
