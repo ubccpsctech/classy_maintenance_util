@@ -80,6 +80,10 @@ def set_ignored_user_names():
 	return get_input(set_ignored_user_names_prompt).strip(' ').split(',')
 
 def request(endpoint_url, verb='get'):
+	if verb == 'get':
+		time.sleep(0.1)
+	if verb == 'delete': 
+		time.sleep(2)
 	headers = get_headers(api_token)
 	response = requests.request(verb, endpoint_url, headers=headers)
 
@@ -96,7 +100,6 @@ def request(endpoint_url, verb='get'):
 # 	return team_members
 
 def get_org_teams(accData=[], page=1):
-	print('GithubUtilities:: get_org_teams() - start')
 	endpoint_url = '{0}/orgs/{1}/teams?page={2}'.format(api_path, github_org, page)
 	teams = request(endpoint_url).json()
 	accData += teams
@@ -104,6 +107,7 @@ def get_org_teams(accData=[], page=1):
 	if len(teams) < MAX_PAGE_SIZE: 
 		print('GithubUtilities:: get_org_teams() - ' + str(len(accData)) + ' teams found in ' + github_org)
 		return accData
+	print('GithubUtilities:: get_org_teams() - ' + str(len(accData)) + ' teams found in ' + github_org)
 	return get_org_teams(accData, page+1)
 
 def get_team_repos(team_name, team_id, acc_data=[], page=1):
@@ -155,7 +159,7 @@ def remove_all_repos_from_teams(teams, all_repos_per_team):
 		if team_name in all_repos_per_team:
 			repos_removed = 0
 			for repo_in_team in all_repos_per_team[team_name]:
-				time.sleep(1.5) ## IMPORTANT. WE WILL BLOCK/CRASH GITHUB AND CLASSY IF TOO QUICK
+				time.sleep(2) ## IMPORTANT. WE WILL BLOCK/CRASH GITHUB AND CLASSY IF TOO QUICK
 				endpoint_url_test = '{0}/teams/{1}/repos/{2}/{3}'.format(api_path, team_id, repo_in_team['owner']['login'], repo_in_team['name']) #delete method
 				print('DEBUG ' + endpoint_url_test)
 				response = request(endpoint_url_test, 'delete')
@@ -201,6 +205,7 @@ print(github_org)
 print(api_path)
 print(ignored_team_names)
 
+print('GithubUtilities:: get_org_teams() - start')
 teams = get_org_teams()
 num_teams = len(teams)
 
@@ -221,6 +226,8 @@ num_repos_ignored = filter_ignored_teams(ignored_team_names, all_repos_per_team)
 # add_team_users_to_ignore_list(ignored_team_names)
 
 print('\n*********OPERATION ANALYTICS*********\n')
+print('Github Organization: ' + github_org)
+print('')
 print('Number of Teams: ' + str(num_teams))
 print('Ignored Teams: ' + json.dumps(ignored_team_names))
 print('')
