@@ -2,7 +2,6 @@ import config
 import json
 import time
 from api import github_enterprise
-from classy_utility import main_menu
 from configparser import ConfigParser
 from network.request import request
 from util import helper
@@ -83,7 +82,7 @@ def confirm_team_removal(num_teams, num_repos_found, num_repos_ignored):
 	answer = helper.prompt_question('Do you want to proceed? y/n: ')
 	if answer == False:
 		print('Aborting...')
-		main_menu()
+		exit()
 
 def show_removal_results(num_teams, num_repos_found, num_repos_ignored, num_repos_removed): 
 	print('')
