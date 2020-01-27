@@ -72,14 +72,6 @@ def get_all_team_repos(teams):
 		all_repos_per_team[team_name] = get_team_repos(team_name, team_id, [])
 	return all_repos_per_team
 
-def del_key_from_dict(dictionary, key): 
-	print("GithubUtilities:: del_key_from_dict - key not found")
-	try:
-		del dictionary[key]
-		print('GithubUtilities:: del_key_from_dict - key ' + key + ' removed')
-	except KeyError:
-		print("GithubUtilities:: del_key_from_dict - key not found")
-
 def get_team_id_from_team_name(teams, team_names):
 	team_ids = {}
 	for team in teams: 
