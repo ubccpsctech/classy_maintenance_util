@@ -8,7 +8,6 @@ from pprint import pprint
 import time
 import re
 
-DIGITS_REGEX = '\d+'
 INVALID_SELECTION = '\n**Invalid selection**'
 
 def invalid_selection():
@@ -21,14 +20,14 @@ def main_menu():
 	print('Github operations that are necessary for the administration of Classy courses.')
 	print('')
 	print('Configured Github Organization: ' + github_org + '\n')
-	print('Main Menu: ')
-	print('1. Remove all repositories from teams')
+	print('Main Menu: \n')
+	print('1. Remove all repositories from teams.')
 
 	text_input = helper.get_input('\nChoose an option: ')
 	selection = ''
 	
 	try:
-		selection = int(re.findall(DIGITS_REGEX, text_input)[0])
+		selection = int(re.findall('\d+', text_input)[0])
 	except IndexError: 
 		invalid_selection()
 

@@ -2,12 +2,12 @@
 from configparser import ConfigParser
 from util import helper
 from network.request import request
+from api import github_enterprise
 import time
 import config
 import json
 
 STOP = 99999999
-MAX_PAGE_SIZE = 30
 
 num_repos_found = 0
 num_repos_removed = 0
@@ -20,37 +20,12 @@ num_teams = 0
 # 	team_members = request(endpoint_url).json()
 # 	return team_members
 
-def get_org_teams(accData=[], page=1):
-	endpoint_url = '{0}/orgs/{1}/teams?page={2}'.format(config.api_path, config.github_org, page)
-	teams = request(endpoint_url).json()
-	accData += teams
-
-	if len(teams) < MAX_PAGE_SIZE: 
-		print('GithubUtilities:: get_org_teams() - ' + str(len(accData)) + ' teams found in ' + config.github_org)
-		return accData
-	print('GithubUtilities:: get_org_teams() - ' + str(len(accData)) + ' teams found in ' + config.github_org)
-	return get_org_teams(accData, page+1)
-
-def get_team_repos(team_name, team_id, acc_data=[], page=1):
-	team_repos_page = []
-	
-	endpoint_url = '{0}/teams/{1}/repos?page={2}'.format(config.api_path, team_id, page)
-	team_repos_page = request(endpoint_url).json()
-	acc_data += team_repos_page
-
-	print(endpoint_url)
-
-	if len(team_repos_page) < MAX_PAGE_SIZE: 
-		print('GithubUtilities:: get_team_repos() - ' + str(len(acc_data)) + ' repos found in ' + team_name)
-		return acc_data
-	return get_team_repos(team_name, team_id, acc_data, page+1)
-
 def get_all_team_repos(teams):
 	all_repos_per_team = {}
 	for team in teams: 
 		team_name = team['name']
 		team_id = team['id']
-		all_repos_per_team[team_name] = get_team_repos(team_name, team_id, [])
+		all_repos_per_team[team_name] = github_enterprise.get_team_repos(team_name, team_id, [])
 	return all_repos_per_team
 
 def get_team_id_from_team_name(teams, team_names):
@@ -100,7 +75,7 @@ def net_num_repos_per_team(all_repos_per_team):
 	return num_repos_found
 
 print('GithubUtilities:: get_org_teams() - start')
-teams = get_org_teams()
+teams = github_enterprise.get_org_teams()
 num_teams = len(teams)
 
 print('GithubUtilities:: get_all_repos_per_team - start')
