@@ -1,10 +1,10 @@
 
 from configparser import ConfigParser
-from util import helpers
+from util import helper
+from network.request import request
+import time
 import config
 import json
-import requests
-import time
 
 STOP = 99999999
 MAX_PAGE_SIZE = 30
@@ -13,25 +13,6 @@ num_repos_found = 0
 num_repos_removed = 0
 num_repos_ignored = 0
 num_teams = 0
-
-def get_headers(api_token):
-	return {'Content-Type': 'application/json',
-			'User-Agent': 'Request-Promise',
-			'Authorization': 'token {0}'.format(api_token)}
-
-def request(endpoint_url, verb='get'):
-	if verb == 'get':
-		time.sleep(0.1)
-	if verb == 'delete': 
-		time.sleep(2)
-	headers = get_headers(config.api_token)
-	response = requests.request(verb, endpoint_url, headers=headers)
-
-	if response.status_code >=200 and response.status_code <300:
-		return response
-
-	print('API ERROR: ' + str(response.status_code))
-	raise SystemError('Could not connect to API. Status code: ' + response.status_code)
 
 # def get_team_members(team_id): 
 # 	print('GithubUtilities:: get_team_members() - start')
@@ -91,7 +72,6 @@ def remove_all_repos_from_teams(teams, all_repos_per_team):
 		if team_name in all_repos_per_team:
 			repos_removed = 0
 			for repo_in_team in all_repos_per_team[team_name]:
-				time.sleep(2) ## IMPORTANT. WE WILL BLOCK/CRASH GITHUB AND CLASSY IF TOO QUICK
 				endpoint_url_test = '{0}/teams/{1}/repos/{2}/{3}'.format(config.api_path, team_id, repo_in_team['owner']['login'], repo_in_team['name']) #delete method
 				print('DEBUG ' + endpoint_url_test)
 				response = request(endpoint_url_test, 'delete')
@@ -151,7 +131,8 @@ print('Number of Repos to be Removed: ' + str(num_repos_found - num_repos_ignore
 print('')
 print('This operation will remove all repos from teams while ignoring the removal of repos on the ignored teams list.')
 print('')
-answer = helpers.prompt_question('Do you want to proceed? y/n: ')
+
+answer = helper.prompt_question('Do you want to proceed? y/n: ')
 if answer == False:
 	print('Exiting...')
 	exit()

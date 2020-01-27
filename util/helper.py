@@ -7,3 +7,5 @@ def prompt_question(question):
 	if answer == 'n':
 		return False
 
+def get_input(text_prompt):
+	return input(text_prompt).strip()

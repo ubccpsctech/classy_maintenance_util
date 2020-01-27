@@ -1,11 +1,19 @@
 # This is a Classy helper utility. It helps automate particular Classy maintenance operations.
 
 import json
-import requests
 from configparser import ConfigParser
+from util import helper
 from config import course, github_org, api_token, api_path, ignored_team_names
 from pprint import pprint
 import time
+import re
+
+DIGITS_REGEX = '\d+'
+INVALID_SELECTION = '\n**Invalid selection**'
+
+def invalid_selection():
+	print(INVALID_SELECTION)
+	main_menu()
 
 def main_menu():
 	print('\n*********CLASSY UTILITY*********\n')
@@ -16,15 +24,21 @@ def main_menu():
 	print('Main Menu: ')
 	print('1. Remove all repositories from teams')
 
-	selection = int(input('\nChoose an option: ').strip())
+	text_input = helper.get_input('\nChoose an option: ')
+	selection = ''
+	
+	try:
+		selection = int(re.findall(DIGITS_REGEX, text_input)[0])
+	except IndexError: 
+		invalid_selection()
 
-	if selection == "1":
+	print(selection)
+	if selection == 1:
 		print('1 sec')
-	elif selection == "2":
+	elif selection == 2:
 		print('Exiting...')
 		exit()
 	else:
-		print('**Invalid selection**')
-		main_menu()
+		invalid_selection()
 
 main_menu()

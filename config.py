@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+from util import helper
 
 config = ConfigParser()
 config.read('config.ini')
@@ -14,16 +15,13 @@ COURSE_PROMPT = 'What is your course number (ie. 436v)? '
 GITHUB_ORG_PROMPT = 'What Github organization would you like to work on? '
 IGNORED_TEAM_NAMES_PROMPT = 'What teams would you like to ignore? Please enter comma seperated teams (ie. staff, admin, students, etc.) '
 
-def get_input(text_prompt):
-	return input(text_prompt)
-
 def set_value(value, prompt):
     if value in config[course] and config[course][value] != '':
         return config[course][value]
-    return get_input(prompt).strip()
+    return helper.get_input(prompt).strip()
 
 try: 
-    course = get_input(COURSE_PROMPT)
+    course = helper.get_input(COURSE_PROMPT)
     github_org = set_value(GITHUB_ORG, GITHUB_ORG_PROMPT)
     api_token = set_value(API_TOKEN, API_TOKEN_PROMPT)
     api_path = set_value(API_PATH, API_PATH_PROMPT)
