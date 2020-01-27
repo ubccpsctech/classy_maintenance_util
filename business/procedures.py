@@ -6,13 +6,13 @@ from github.team import get_team_id_from_team_name
 
 def remove_all_repos_from_teams_in_org():
 	""" Removes every repository from Github teams in configured organization, except teams specified in ignored_team_names config."""
+	print('Procedures:: remove_all_repos_from_teams() - start')
 
 	num_repos_found = 0
 	num_repos_removed = 0
 	num_repos_ignored = 0
 	num_teams = 0
 
-	print('Procedures:: remove_all_repos_from_teams() - start')
 	print('Procedures:: remove_all_repos_from_teams() -- Getting Organization Teams')
 	teams = github_enterprise.get_all_org_teams()
 	num_teams = len(teams)
@@ -37,8 +37,24 @@ def remove_all_repos_from_teams_in_org():
 	confirm_team_removal(num_teams, num_repos_found, num_repos_ignored)
 
 	print('Procedures:: remove_all_repos_from_teams() - Starting Removal of Repos on Teams')
-	num_repos_removed = remove_all_repos_from_teams(teams, all_repos_per_team)
+	num_repos_removed = 0
 
+	for team in teams: 
+		team_name = team['name']
+		team_id = team['id']
+
+		if team_name in all_repos_per_team:
+			repos_removed = 0
+
+			for repo_in_team in all_repos_per_team[team_name]:
+				success = github_enterprise.remove_repo_from_team(team_id, repo_in_team['owner']['login'], repo_in_team['name'], team_name)
+				if success == True: 
+					repos_removed+=1 
+
+			num_repos_removed+=repos_removed
+	return num_repos_removed
+
+	print('Procedure:: remove_all_repos_from_teams() - FINISHED')
 	show_results(num_teams, num_repos_found, num_repos_ignored, num_repos_removed)
 
 def confirm_team_removal(num_teams, num_repos_found, num_repos_ignored): 
