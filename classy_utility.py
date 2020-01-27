@@ -24,7 +24,7 @@ def main_menu():
 	print('1. Remove all repositories from teams.')
 
 	text_input = helper.get_input('\nChoose an option: ')
-	selection = ''
+	selection = 99999999999
 	
 	try:
 		selection = int(re.findall('\d+', text_input)[0])
