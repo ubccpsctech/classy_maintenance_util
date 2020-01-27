@@ -7,18 +7,18 @@ from network.request import request
 from util import helper
 
 def remove_all_repos_from_teams():
-	print('Procedures:: remove_all_repos_from_teams() - start')
+	print('TeamRepo:: remove_all_repos_from_teams() - start')
 
 	num_repos_found = 0
 	num_repos_removed = 0
 	num_repos_ignored = 0
 	num_teams = 0
 
-	print('Procedures:: remove_all_repos_from_teams() -- Getting Organization Teams')
+	print('TeamRepo:: remove_all_repos_from_teams() -- Getting Organization Teams')
 	teams = github_enterprise.get_all_org_teams()
 	num_teams = len(teams)
 
-	print('Procedures:: remove_all_repos_from_teams() - Getting Repos on Teams')
+	print('TeamRepo:: remove_all_repos_from_teams() - Getting Repos on Teams')
 	all_repos_per_team = {}
 	for team in teams: 
 		team_name = team['name']
@@ -28,7 +28,7 @@ def remove_all_repos_from_teams():
 	for teamKey in all_repos_per_team.keys(): 
 		num_repos_found += len(all_repos_per_team[teamKey])
 
-	print('Procedures:: remove_all_repos_from_teams() - Setting Teams to Ignore')
+	print('TeamRepo:: remove_all_repos_from_teams() - Setting Teams to Ignore')
 	ignored_team_ids = get_team_id_from_team_name(teams, config.ignored_team_names)
 	for ignored_team_name in config.ignored_team_names:
 		num_repos_on_team = len(all_repos_per_team[ignored_team_name])
@@ -37,7 +37,7 @@ def remove_all_repos_from_teams():
 
 	confirm_team_removal(num_teams, num_repos_found, num_repos_ignored)
 
-	print('Procedures:: remove_all_repos_from_teams() - Starting Removal of Repos on Teams')
+	print('TeamRepo:: remove_all_repos_from_teams() - Starting Removal of Repos on Teams')
 	num_repos_removed = 0
 
 	for team in teams: 

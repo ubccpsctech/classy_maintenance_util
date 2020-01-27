@@ -9,10 +9,10 @@ def get_all_org_teams(accData=[], page=1):
 	accData += teams
 
 	if len(teams) < MAX_PAGE_SIZE: 
-		print('GithubUtilities:: get_org_teams() - ' + str(len(accData)) + ' teams found in ' + config.github_org)
+		print('GithubEnterprise:: get_all_org_teams() - ' + str(len(accData)) + ' teams found in ' + config.github_org)
 		return accData
 
-	print('GithubUtilities:: get_org_teams() - ' + str(len(accData)) + ' teams found in ' + config.github_org)
+	print('GithubEnterprise:: get_all_org_teams() - ' + str(len(accData)) + ' teams found in ' + config.github_org)
 
 	return get_all_org_teams(accData, page+1)
 

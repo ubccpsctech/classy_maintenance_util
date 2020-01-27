@@ -25,7 +25,7 @@ try:
     github_org = set_value(GITHUB_ORG, GITHUB_ORG_PROMPT)
     api_token = set_value(API_TOKEN, API_TOKEN_PROMPT)
     api_path = set_value(API_PATH, API_PATH_PROMPT)
-    ignored_team_names = set_value(IGNORED_TEAM_NAMES, IGNORED_TEAM_NAMES_PROMPT)
+    ignored_team_names = set_value(IGNORED_TEAM_NAMES, IGNORED_TEAM_NAMES_PROMPT).split(',')
 except KeyError: 
     print('Config.py:: ERROR - Configuration values missing. Exiting...')
     exit()
