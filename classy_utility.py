@@ -1,13 +1,13 @@
 # This is a Classy helper utility. It helps automate particular Classy maintenance operations.
 
 import json
-from business.procedures.team_repo import remove_all_repos_from_teams_in_org
+import time
+import re
 from configparser import ConfigParser
 from config import course, github_org, api_token, api_path, ignored_team_names
 from pprint import pprint
 from util import helper
-import time
-import re
+from business.team_repo import remove_all_repos_from_teams
 
 INVALID_SELECTION = '\n**Invalid selection**'
 
@@ -37,7 +37,7 @@ def main_menu():
 	if selection == 1:
 		show_configuration()
 	elif selection == 2:
-		remove_all_repos_from_teams_in_org()
+		print('anything')
 	else:
 		invalid_selection()
 
