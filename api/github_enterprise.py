@@ -24,13 +24,13 @@ def get_all_repos_on_team(team_name, team_id, acc_data=[], page=1):
 	print(endpoint_url)
 
 	if len(team_repos_page) < MAX_PAGE_SIZE: 
-		print('GithubUtilities:: get_team_repos() - ' + str(len(acc_data)) + ' repos found in ' + team_name)
+		print('GithubEnterprise:: get_all_repos_on_team() - ' + str(len(acc_data)) + ' repos found in ' + team_name)
 		return acc_data
 	return get_all_repos_on_team(team_name, team_id, acc_data, page+1)
 
 def remove_repo_from_team(team_id, owner, repo_name, team_name):
 	endpoint_url_test = '{0}/teams/{1}/repos/{2}/{3}'.format(config.api_path, team_id, owner, repo_name) #delete method
-	print('DEBUG ' + endpoint_url_test)
+	print('GithubEnterprise:: remove_repo_from_team() ' + endpoint_url_test)
 	response = request(endpoint_url_test, 'delete')
 	if response.status_code == 204: 
 		print('GithubEnterprise:: remove_repo_from_team() - Removed ' + repo_name + ' from ' + team_name)

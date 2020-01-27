@@ -1,10 +1,11 @@
 # This is a Classy helper utility. It helps automate particular Classy maintenance operations.
 
 import json
+from business.procedures.team_repo import remove_all_repos_from_teams_in_org
 from configparser import ConfigParser
-from util import helper
 from config import course, github_org, api_token, api_path, ignored_team_names
 from pprint import pprint
+from util import helper
 import time
 import re
 
@@ -21,7 +22,8 @@ def main_menu():
 	print('')
 	print('Configured Github Organization: ' + github_org + '\n')
 	print('Main Menu: \n')
-	print('1. Remove all repositories from teams.')
+	print('1. Display current configuration.')
+	print('2. Remove all repositories from teams.')
 
 	text_input = helper.get_input('\nChoose an option: ')
 	selection = 99999999999
@@ -33,11 +35,14 @@ def main_menu():
 
 	print(selection)
 	if selection == 1:
-		print('1 sec')
+		show_configuration()
 	elif selection == 2:
-		print('Exiting...')
-		exit()
+		remove_all_repos_from_teams_in_org()
 	else:
 		invalid_selection()
+
+def show_configuration(): 
+	print('\nCurrent Configuration: ')
+	print(github_org)
 
 main_menu()
