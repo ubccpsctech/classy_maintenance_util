@@ -24,6 +24,7 @@ def main_menu():
 		print('Exiting...')
 		exit()
 	else:
+		print('**Invalid selection**')
 		main_menu()
 
 main_menu()

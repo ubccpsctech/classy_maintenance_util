@@ -29,6 +29,6 @@ try:
     api_path = set_value(API_PATH, API_PATH_PROMPT)
     ignored_team_names = set_value(IGNORED_TEAM_NAMES, IGNORED_TEAM_NAMES_PROMPT)
 except KeyError: 
-    print('Config.py:: Configuration error. Exiting...')
+    print('Config.py:: ERROR - Configuration values missing. Exiting...')
     exit()
 
