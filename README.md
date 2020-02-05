@@ -16,15 +16,16 @@ github_org = classydev
 api_token = longRandomString
 api_path = https://github-dev.students.cs.ubc.ca/api/v3
 ignored_team_names = admin,staff,students
-get_req_delay = 0.1
-del_req_delay = 2.0
+req_delay = 2.0
+staff_ldap=cpsc999_2019W2_TAs
+students_ldap=cpsc999_2019W2
 
-[cs-999]
+[999]
 github_org = cpsc999-2019w-t1
 api_path = https://github.students.cs.ubc.ca/api/v3
 api_token = githubAPIToken
 
-[cs-999-dev]
+[999-dev]
 github_org = cpsc999-2019w-t1
 api_token = githubAPIToken
 ```
