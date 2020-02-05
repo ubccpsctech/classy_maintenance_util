@@ -4,6 +4,7 @@ Perform routine operations and procedures.
 Features: 
 
 - Disassociates repos for every team in a Github organization
+- Setup of a Github organization (org creation, Classy default team creation, LDAP integration, some but not all org configuration)
 
 NOTE: Tested with Github Enterprise but not Github.com
 
