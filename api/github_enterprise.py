@@ -3,6 +3,33 @@ from network.request import request
 
 MAX_PAGE_SIZE = 30
 
+def create_org(org_name, admin):
+	endpoint_url = '{0}/admin/organizations'.format(config.api_path)
+	payload = {
+		"login": org_name,
+		"profile_name": org_name,
+		"admin": admin
+	}
+	request(endpoint_url, 'post', payload)
+
+def patch_org(org_name):
+	endpoint_url = '{0}/orgs/{1}'.format(config.api_path, org_name)
+	payload = {
+		"default_repository_permission": "none",
+		"members_can_create_repositories": "false",
+		"members_allowed_repository_creation_type": "none"
+	}
+	request(endpoint_url, 'patch', payload)
+
+def create_team(org_name, team_name, ldap_dn=''):
+	endpoint_url = '{0}/orgs/{1}/teams'.format(config.api_path, org_name)
+	payload = {
+		"name": team_name
+	}
+	if ldap_dn != '':
+		payload['ldap_dn'] = ldap_dn
+	return request(endpoint_url, 'post', payload)
+
 def get_all_org_teams(accData=[], page=1):
 	endpoint_url = '{0}/orgs/{1}/teams?page={2}'.format(config.api_path, config.github_org, page)
 	teams = request(endpoint_url).json()

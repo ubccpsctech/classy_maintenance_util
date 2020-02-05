@@ -30,8 +30,8 @@ try:
     api_token = set_value(API_TOKEN, API_TOKEN_PROMPT)
     api_path = set_value(API_PATH, API_PATH_PROMPT)
     ignored_team_names = set_value(IGNORED_TEAM_NAMES, IGNORED_TEAM_NAMES_PROMPT).split(',')
-    get_req_delay = set_value()
-    del_req_delay = set_value
+    get_req_delay = set_value(GET_REQ_DELAY, GET_REQ_DELAY_PROMPT)
+    del_req_delay = set_value(DEL_REQ_DELAY, DEL_REQ_DELAY_PROMPT)
 except KeyError: 
     print('Config.py:: ERROR - Configuration values missing. Exiting...')
     exit()

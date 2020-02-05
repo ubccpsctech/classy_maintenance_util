@@ -7,7 +7,7 @@ from configparser import ConfigParser
 from config import course, github_org, api_token, api_path, ignored_team_names
 from pprint import pprint
 from util import helper
-from business import team_repo
+from business import team_repo, organization, team
 
 INVALID_SELECTION = '\n**Invalid selection**'
 
@@ -24,6 +24,8 @@ def main_menu():
 	print('Main Menu: \n')
 	print('1. Display current configuration.')
 	print('2. Remove all repositories from teams.')
+	print('3. Creating testing organization.')
+	print('4. Create new Github organization.')
 
 	text_input = helper.get_input('\nChoose an option: ')
 	selection = 99999999999
@@ -38,11 +40,17 @@ def main_menu():
 		show_configuration()
 	elif selection == 2:
 		team_repo.remove_all_repos_from_teams()
+	elif selection == 4:
+		organization.create_org()
+		team.create_team()
 	else:
 		invalid_selection()
 
 def show_configuration(): 
-	print('\nCurrent Configuration: ')
-	print(github_org)
+	print('\n*********CURRENT CONFIGURATION*********\n')
+	print('Github Organization: ' + github_org)
+	print('API Token: ' + api_token)
+	print('API Path: ' + api_path)
+	print('Ignored Team Names ' + ignored_team_names)
 
 main_menu()
