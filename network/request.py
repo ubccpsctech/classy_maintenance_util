@@ -9,9 +9,9 @@ def get_headers(api_token):
 
 def request(endpoint_url, verb='get', data={}):
 	if verb == 'get':
-		time.sleep(config.get_req_delay)
-	if verb == 'delete': 
-		time.sleep(config.del_req_delay)
+		time.sleep(1)
+	else:
+		time.sleep(2)
     
 	headers = get_headers(config.api_token)
 	try: 

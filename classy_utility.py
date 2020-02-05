@@ -7,7 +7,7 @@ from configparser import ConfigParser
 from config import course, github_org, api_token, api_path, ignored_team_names
 from pprint import pprint
 from util import helper
-from business import team_repo, organization, team
+from business import utility_operations
 
 INVALID_SELECTION = '\n**Invalid selection**'
 
@@ -39,10 +39,9 @@ def main_menu():
 	if selection == 1:
 		show_configuration()
 	elif selection == 2:
-		team_repo.remove_all_repos_from_teams()
+		utility_operations.remove_all_repos_from_teams()
 	elif selection == 4:
-		organization.create_org()
-		team.create_team()
+		utility_operations.setup_github_org()
 	else:
 		invalid_selection()
 

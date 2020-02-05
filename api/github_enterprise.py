@@ -12,13 +12,8 @@ def create_org(org_name, admin):
 	}
 	request(endpoint_url, 'post', payload)
 
-def patch_org(org_name):
+def patch_org(org_name, payload={}):
 	endpoint_url = '{0}/orgs/{1}'.format(config.api_path, org_name)
-	payload = {
-		"default_repository_permission": "none",
-		"members_can_create_repositories": "false",
-		"members_allowed_repository_creation_type": "none"
-	}
 	request(endpoint_url, 'patch', payload)
 
 def create_team(org_name, team_name, ldap_dn=''):

@@ -6,6 +6,58 @@ from configparser import ConfigParser
 from network.request import request
 from util import helper
 
+def setup_github_org():
+	print('UtilityOperations:: setup_github_org - start')
+
+	confirm_org_creation()
+
+	print('UtilityOperations:: Creating Github Organization - start ')
+	github_enterprise.create_org(config.github_org, 'steca')
+
+	ldap_teams = {
+		"staff": 'cn={0},ou=Groups,ou=Github,dc=students,dc=cs,dc=ubc,dc=ca'.format(config.staff_ldap),
+		"admin": '', ## should be blank, as no LDAP group exists for admins
+		"students": 'cn={0},ou=Groups,ou=Github,dc=students,dc=cs,dc=ubc,dc=ca'.format(config.students_ldap)
+	}
+
+	team_ids = []
+
+	print('UtilityOperations:: Creating Organization Teams (admin, staff, students) - start ')
+	for ldap_team in ldap_teams.keys():
+		team_id = github_enterprise.create_team(config.github_org, ldap_team, ldap_teams[ldap_team])
+		team_ids += team_id
+
+	payload = {
+		"default_repository_permission": "none",
+		"members_can_create_repositories": False
+	}
+
+	print('UtilityOperations:: Patching Github Organization member permissions (admin, staff, students) - start ')
+	github_enterprise.patch_org(config.github_org, payload)
+	show_org_creation_results()
+
+def confirm_org_creation():
+	print('\n*********GITHUB ORG CREATION*********\n')
+	print('Github Organization: ' + config.github_org)
+	print('')
+	print('Admin Team: none' )
+	print('Staff Team: ' + config.staff_ldap)
+	print('Students Team: ' + config.students_ldap)
+	print('')
+
+	answer = helper.prompt_question('Do you want to proceed? y/n: ')
+	if answer == False:
+		print('Aborting...')
+		exit()
+	
+def show_org_creation_results():
+	print('\n*********GITHUB ORG CREATION*********\n')
+	print(config.github_org + ' has been created. \n')
+	print('NECESSARY MANUAL STEPS: ' )
+	print(' - Deselect "Repository Invitations"')
+	print(' - Deselect "Team Creation Rules"')
+
+
 def remove_all_repos_from_teams():
 	print('TeamRepo:: remove_all_repos_from_teams() - start')
 
